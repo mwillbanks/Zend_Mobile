@@ -13,26 +13,24 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend\Mobile
- * @subpackage Zend\Mobile\Push
+ * @package    Zend_Mobile
+ * @subpackage Zend_Mobile_Push
  * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-/**
- * @namespace
- */
-namespace Zend\Mobile\Push;
+/** Zend_Mobile_Push_Message_Abstract **/
+require_once 'Zend/Mobile/Push/Message/Abstract.php';
 
 /**
  * Mpns Message
  *
  * @category   Zend
- * @package    Zend\Mobile
- * @subpackage Zend\Mobile\Push
+ * @package    Zend_Mobile
+ * @subpackage Zend_Mobile_Push
  * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Mpns extends AbstractPush
+class Zend_Mobile_Push_Message_Mpns extends Zend_Mobile_Push_Message_Abstract
 {
 }
