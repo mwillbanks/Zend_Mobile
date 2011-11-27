@@ -138,4 +138,5 @@ $message->setBackContent('dude');
 $mpns->send($message);
 
 h2. ZF Proposal
+
 ZF Proposal Page: "Zend_Mobile_Push - Mike Willbanks":http://framework.zend.com/wiki/display/ZFPROP/Zend_Mobile_Push+-+Mike+Willbanks
