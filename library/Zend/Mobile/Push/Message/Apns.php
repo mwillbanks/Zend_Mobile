@@ -87,19 +87,19 @@ class Zend_Mobile_Push_Message_Apns extends Zend_Mobile_Push_Message_Abstract
      */
     public function setAlert($text, $actionLocKey=null, $locKey=null, $locArgs=null, $launchImage=null)
     {
-        if ($text != null && !is_string($text)) {
+        if ($text !== null && !is_string($text)) {
             throw new Zend_Mobile_Push_Message_Exception('$text must be a string');
         }
 
-        if ($actionLocKey != null && !is_string($actionLocKey)) {
+        if ($actionLocKey !== null && !is_string($actionLocKey)) {
             throw new Zend_Mobile_Push_Message_Exception('$actionLocKey must be a string');
         }
 
-        if ($locKey != null && !is_string($locKey)) {
+        if ($locKey !== null && !is_string($locKey)) {
             throw new Zend_Mobile_Push_Message_Exception('$locKey must be a string');
         }
 
-        if ($locArgs != null) {
+        if ($locArgs !== null) {
             if (!is_array($locArgs)) {
                 throw new Zend_Mobile_Push_Message_Exception('$locArgs must be an array of strings');
             } else {
@@ -111,7 +111,7 @@ class Zend_Mobile_Push_Message_Apns extends Zend_Mobile_Push_Message_Abstract
             }
         }
 
-        if (null != $launchImage && !is_sring($launchImage)) {
+        if (null !== $launchImage && !is_string($launchImage)) {
             throw new Zend_Mobile_Push_Message_Exception('$launchImage must be a string');
         }
 
@@ -194,9 +194,13 @@ class Zend_Mobile_Push_Message_Apns extends Zend_Mobile_Push_Message_Abstract
      *
      * @param string $sound
      * @return Zend_Mobile_Push_Message_Apns
+     * @throws Zend_Mobile_Push_Message_Exception
      */
     public function setSound($sound)
     {
+        if (!is_string($sound)) {
+            throw new Zend_Mobile_Push_Message_Exception('$sound must be a string');
+        }
         $this->_sound = $sound;
         return $this;
     }
