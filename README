@@ -1,1 +1,141 @@
-An example implementation for push notification implementation to ZF 1.12.
+h1. Zend Framework 1.x Push Notifications
+
+This project makes usage of libraries from Zend Framework for a few different
+areas:
+* C2dm Authentication - Zend_Gdata_ClientLogin
+* C2dm Exceptions - Zend_Filter_Alpha
+* C2dm & Mpns HTTP - Zend_Http_Client
+* Mpns Id Validation - Zend_Uri
+
+h2. Use Cases
+
+h3. Sending a Message with APNS
+
+bc.. <?php
+
+require_once 'Zend/Mobile/Push/Apns.php';
+require_once 'Zend/Mobile/Push/Message/Apns.php';
+
+$apns = new Zend_Mobile_Push_Apns();
+$apns->setCertificate(dirname(__FILE__) . '/mycert.pem'); // REPLACE WITH YOUR CERT
+ 
+$message = new Zend_Mobile_Push_Message_Apns();
+$message->setToken('some-type-of-token'); // REPLACE WITH A APNS TOKEN
+$message->setId(time());
+$message->setAlert('This is a test message!');
+$message->setBadge(1);
+$message->setSound('somesound');
+$apns->send($message);
+
+h3. Getting Feedback from APNS
+
+bc.. <?php
+require_once 'Zend/Mobile/Push/Apns.php';
+ 
+$apns = new Zend_Mobile_Push_Apns();
+$apns->setCertificate(dirname(__FILE__) . '/mycert.pem'); // REPLACE WITH YOUR CERT
+print_r($apns->feedback()); // array of items
+
+h3. Sending a Message with C2DM
+
+bc.. <?php
+
+require_once 'Zend/Mobile/Push/C2dm.php';
+require_once 'Zend/Mobile/Push/Message/C2dm.php';
+require_once 'Zend/Gdata/ClientLogin.php';
+ 
+try {
+    $client = Zend_Gdata_ClientLogin::getHttpClient(
+        'my@gmail.com', // REPLACE WITH YOUR GOOGLE ACCOUNT
+        'myPassword', // REPLACE WITH YOUR PASSWORD
+        Zend_Mobile_Push_C2dm::AUTH_SERVICE_NAME,
+        null,
+        'myAppName' // REPLACE WITH YOUR APP NAME
+    );
+} catch (Zend_Gdata_App_CaptchaRequiredException $cre) {
+    // manual login is required
+    echo 'URL of CAPTCHA image: ' . $cre->getCaptchaUrl() . PHP_EOL;
+    echo 'Token ID: ' . $cre->getCaptchaToken() . PHP_EOL;
+    exit(1);
+} catch (Zend_Gdata_App_AuthException $ae) {
+    echo 'Problem authenticating: ' . $ae->exception() . PHP_EOL;
+    exit(1);
+}
+ 
+$c2dm = new Zend_Mobile_Push_C2dm();
+$c2dm->setLoginToken($client->getClientLoginToken());
+ 
+$message = new Zend_Mobile_Push_Message_C2dm();
+$message->setToken('a-device-token'); // REPLACE WITH A DEVICE TOKEN
+$message->setId('testCollapseKey');
+$message->setData(array(
+    'title' => 'Test Notification',
+    'msg' => 'This is a test notification.'
+));
+try {
+    $c2dm->send($message);
+} catch (Zend_Mobile_Push_Exception_InvalidRegistration $e) {
+    // do not attempt to send again
+} catch (Zend_Mobile_Push_Exception_NotRegistered $e) {
+    // do not attempt to send again
+} catch (Zend_Mobile_Push_Exception_DeviceQuotaExceeded $e) {
+    // retry later, likely each hour.
+} catch (Zend_Mobile_Push_Exception_ServerUnavailable $e) {
+    // retry later using exponential backoff
+} catch (Zend_Mobile_Push_Exception $e) {
+    // all of these are fatal in nature, log and figure out what you did ;)
+}
+
+h3. Sending a Raw Message with MPNS
+
+bc.. <?php
+require_once 'Zend/Mobile/Push/Mpns.php';
+require_once 'Zend/Mobile/Push/Message/Mpns/Raw.php';
+ 
+$mpns = new Zend_Mobile_Push_Mpns();
+ 
+$message = new Zend_Mobile_Push_Message_Mpns_Raw();
+$message->setToken('http://somenotificationuri'); // REPLACE WITH NOTIFICATION URI FROM MPNS
+$message->setMessage('<root><value attr="stuff" /></root>');
+$mpns->send($message);
+
+h3. Sending a Toast Message with MPNS
+
+bc.. <?php
+require_once 'Zend/Mobile/Push/Mpns.php';
+require_once 'Zend/Mobile/Push/Message/Mpns/Toast.php';
+ 
+$mpns = new Zend_Mobile_Push_Mpns();
+ 
+$message = new Zend_Mobile_Push_Message_Mpns_Toast();
+$message->setToken('http://somenotificationuri'); // REPLACE WITH NOTIFICATION URI FROM MPNS
+$message->setTitle('Test Notification');
+$message->setMessage('This is a test notification');
+
+// optional attributes for wp7.1+
+$message->setParams('?value=12345')'
+$mpns->send($message);
+
+h3. Sending a Tile Message with MPNS
+
+bc.. <?php
+require_once 'Zend/Mobile/Push/Mpns.php';
+require_once 'Zend/Mobile/Push/Message/Mpns/Toast.php';
+ 
+$mpns = new Zend_Mobile_Push_Mpns();
+ 
+$message = new Zend_Mobile_Push_Message_Mpns_Tile();
+$message->setToken('http://somenotificationuri'); // REPLACE WITH NOTIFICATION URI FROM MPNS
+$message->setBackgroundImage('red.jpg');
+$message->setCount(1);
+$message->setTitle('Wowzah!');
+
+// other optional attributes for wp7.1+
+$message->setTileId('/SomeAction.xaml');
+$message->setBackBackgroundImage('blue.jpg');
+$message->setBackTitle('Woaaa!');
+$message->setBackContent('dude');
+$mpns->send($message);
+
+h2. ZF Proposal
+ZF Proposal Page: "Zend_Mobile_Push - Mike Willbanks":http://framework.zend.com/wiki/display/ZFPROP/Zend_Mobile_Push+-+Mike+Willbanks
