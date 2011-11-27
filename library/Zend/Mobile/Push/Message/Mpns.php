@@ -19,7 +19,6 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-/** Zend_Mobile_Push_Message_Abstract **/
 require_once 'Zend/Mobile/Push/Message/Abstract.php';
 
 /**
@@ -31,6 +30,76 @@ require_once 'Zend/Mobile/Push/Message/Abstract.php';
  * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Mobile_Push_Message_Mpns extends Zend_Mobile_Push_Message_Abstract
+abstract class Zend_Mobile_Push_Message_Mpns extends Zend_Mobile_Push_Message_Abstract
 {
+    /**
+     * Mpns types
+     * @var string
+     */
+    const TYPE_RAW = 'raw';
+    const TYPE_TILE = 'tile';
+    const TYPE_TOAST = 'token';
+
+    /**
+     * Delay
+     * @var int
+     */
+    protected $_delay;
+
+    /**
+     * Get Delay
+     *
+     * @return int
+     */
+    abstract public function getDelay();
+
+    /**
+     * Set Delay
+     *
+     * @param int $delay one of const DELAY_* of implementing classes
+     * @return Zend_Mobile_Push_Message_Mpns
+     */
+    abstract public function setDelay($delay);
+
+    /**
+     * Get Notification Type
+     *
+     * @return string
+     */
+    abstract public static function getNotificationType();
+
+    /**
+     * Set Token
+     *
+     * @param string $token
+     * @return Zend_Mobile_Push_Message_Mpns
+     * @throws Zend_Mobile_Push_Message_Exception
+     */
+    public function setToken($token)
+    {
+        if (!Zend_Uri::check($token)) {
+            throw new Zend_Mobile_Push_Message_Exception('$token is not a valid URI');
+        }
+        return parent::setToken($token);
+    }
+
+    /**
+     * Get XML Payload
+     *
+     * @return string
+     */
+    abstract public function getXmlPayload();
+
+    /**
+     * Validate proper mpns message
+     *
+     * @return boolean
+     */
+    public function validate()
+    {
+        if (!isset($this->_token) || strlen($this->_token) === 0) {
+            return false;
+        }
+        return parent::validate();
+    }
 }
