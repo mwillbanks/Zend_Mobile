@@ -321,13 +321,13 @@ class Zend_Mobile_Push_Message_Mpns_Tile extends Zend_Mobile_Push_Message_Mpns
             . '<wp:Title>' . htmlspecialchars($this->_title) . '</wp:Title>';
 
         if ($this->_backBackgroundImage) {
-            $ret .= '<wp:BackBackgroundImage>' . htmlspecialchars($this->_backBackgroundImage) . '</wp:BackBackgroundImage>'
+            $ret .= '<wp:BackBackgroundImage>' . htmlspecialchars($this->_backBackgroundImage) . '</wp:BackBackgroundImage>';
         }
         if ($this->_backTile) {
-            $ret .= '<wp:BackTitle>' . htmlspecialchars($this->_backTitle) . '</wp:BackTitle>'
+            $ret .= '<wp:BackTitle>' . htmlspecialchars($this->_backTitle) . '</wp:BackTitle>';
         }
         if ($this->_backContent) {
-            $ret .= '<wp:BackContent>' . htmlspecialchars($this->_backContent) . '</wp:BackContent>'
+            $ret .= '<wp:BackContent>' . htmlspecialchars($this->_backContent) . '</wp:BackContent>';
         }
 
         $ret .= '</wp:Tile>'

@@ -20,6 +20,7 @@
  */
 
 require_once 'Zend/Mobile/Push/Message/Abstract.php';
+require_once 'Zend/Uri.php';
 
 /**
  * Mpns Message
@@ -66,7 +67,10 @@ abstract class Zend_Mobile_Push_Message_Mpns extends Zend_Mobile_Push_Message_Ab
      *
      * @return string
      */
-    abstract public static function getNotificationType();
+    public static function getNotificationType()
+    {
+        return "";
+    }
 
     /**
      * Set Token
@@ -77,6 +81,9 @@ abstract class Zend_Mobile_Push_Message_Mpns extends Zend_Mobile_Push_Message_Ab
      */
     public function setToken($token)
     {
+        if (!is_string($token)) {
+            throw new Zend_Mobile_Push_Message_Exception('$token is not a string');
+        }
         if (!Zend_Uri::check($token)) {
             throw new Zend_Mobile_Push_Message_Exception('$token is not a valid URI');
         }
