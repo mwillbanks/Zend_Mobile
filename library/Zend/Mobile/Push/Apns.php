@@ -138,7 +138,8 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
         );
 
         if (!$this->_socket) {
-            throw new Zend_Mobile_Push_Exception(sprintf('Unable to connect: %s: %d (%s)',
+            require_once 'Zend/Mobile/Push/Exception/ServerUnavailable.php';
+            throw new Zend_Mobile_Push_Exception_ServerUnavailable(sprintf('Unable to connect: %s: %d (%s)',
                 $env,
                 $errno,
                 $errstr
@@ -169,9 +170,7 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
         $tokens = array();
         while(!feof($this->_socket)) {
             $token = fread($this->_socket, 38); // one at a time :)
-            var_dump($token);
             $token = unpack('Ntime/ntokenLength/H*token');
-            var_dump($token);
             $tokens[] = $token['token'];
         }
         return $tokens;
@@ -229,7 +228,8 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
             . $payload;
         $ret = fwrite($this->_socket, $payload);
         if ($ret === false) {
-            throw new Zend_Mobile_Push_Exception('Unable to send message');
+            require_once 'Zend/Mobile/Push/Exception/ServerUnavailable.php';
+            throw new Zend_Mobile_Push_Exception_ServerUnavailable('Unable to send message');
         }
         // check for errors from apple
         $err = fread($this->_socket, 1024);
@@ -243,24 +243,31 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
                     throw new Zend_Mobile_Push_Exception('Apns reported a processing error.');
                     break;
                 case 2:
+                    require_once 'Zend/Mobile/Push/Exception/InvalidToken.php';
                     throw new Zend_Mobile_Push_Exception_InvalidToken('A token must be set to send a message to the user');
                     break;
                 case 3:
-                    throw new Zend_Mobile_Push_Exception('Missing topic');
+                    require_once 'Zend/Mobile/Push/Exception/InvalidTopic.php';
+                    throw new Zend_Mobile_Push_Exception_InvalidTopic('Missing topic');
                     break;
                 case 4:
-                    throw new Zend_Mobile_Push_Exception('Missing payload');
+                    require_once 'Zend/Mobile/Push/Exception/InvalidPayload';
+                    throw new Zend_Mobile_Push_Exception_InvalidPayload('Missing payload');
                     break;
                 case 5:
+                    require_once 'Zend/Mobile/Push/Exception/InvalidToken.php';
                     throw new Zend_Mobile_Push_Exception_InvalidToken('Invalid token size');
                     break;
                 case 6:
-                    throw new Zend_Mobile_Push_Exception('Invalid topic size');
+                    require_once 'Zend/Mobile/Push/Exception/InvalidTopic.php';
+                    throw new Zend_Mobile_Push_Exception_InvalidTopic('Invalid topic size');
                     break;
                 case 7:
-                    throw new Zend_Mobile_Push_Exception('Invalid payload size');
+                    require_once 'Zend/Mobile/Push/Exception/MessageTooBig.php';
+                    throw new Zend_Mobile_Push_Exception_MessageTooBig('Invalid payload size');
                     break;
                 case 8:
+                    require_once 'Zend/Mobile/Push/Exception/InvalidToken.php';
                     throw new Zend_Mobile_Push_Exception_InvalidToken('Invalid token');
                     break;
                 default:
