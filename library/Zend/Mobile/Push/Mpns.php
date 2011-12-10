@@ -80,7 +80,7 @@ class Zend_Mobile_Push_Mpns extends Zend_Mobile_Push_Abstract
     public function send(Zend_Mobile_Push_Message_Abstract $message)
     {
         if (!$message->validate()) {
-            throw new Zend_Mobile_Push_Exception('Zend_Mobile_Push_Message_C2dm parameter is not valid');
+            throw new Zend_Mobile_Push_Exception('Zend_Mobile_Push_Message_Mpns parameter is not valid');
         }
 
         $this->connect();
@@ -113,13 +113,15 @@ class Zend_Mobile_Push_Mpns extends Zend_Mobile_Push_Abstract
                 }
                 break;
             case 400:
-                throw new Zend_Mobile_Push_Exception('The message xml was invalid');
+                require_once 'Zend/Mobile/Push/Exception/InvalidPayload.php';
+                throw new Zend_Mobile_Push_Exception_InvalidPayload('The message xml was invalid');
                 break;
             case 401:
-                throw new Zend_Mobile_Push_Exception('The device token is not valid or there is a mismatch between certificates');
+                require_once 'Zend/Mobile/Push/Exception/InvalidToken.php';
+                throw new Zend_Mobile_Push_Exception_InvalidToken('The device token is not valid or there is a mismatch between certificates');
                 break;
             case 404:
-                require_once 'Zend/Mobile/Push/Exception/NotRegistered';
+                require_once 'Zend/Mobile/Push/Exception/NotRegistered.php';
                 throw new Zend_Mobile_Push_Exception_NotRegistered('The device subscription is invalid, stop sending notifications to this device');
                 break;
             case 405:
