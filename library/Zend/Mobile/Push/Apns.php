@@ -168,10 +168,13 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
         }
 
         $tokens = array();
-        while(!feof($this->_socket)) {
-            $token = fread($this->_socket, 38); // one at a time :)
-            $token = unpack('Ntime/ntokenLength/H*token');
-            $tokens[] = $token['token'];
+        while (!feof($this->_socket)) {
+            $token = fread($this->_socket, 38);
+            if (strlen($token) < 38) {
+                continue; // Should we throw an Exception here?
+            }
+            $token = unpack('Ntime/ntokenLength/H*token', $token);
+            $tokens[] = array('token' => $token['token'], 'time' => $token['time']);
         }
         return $tokens;
     }
