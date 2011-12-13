@@ -67,6 +67,7 @@ abstract class Zend_Mobile_Push_Abstract implements Zend_Mobile_Push_Interface
         if (!$this->_isConnected) {
             $this->connect();
         }
+        return true;
     }
 
     /**
@@ -77,6 +78,16 @@ abstract class Zend_Mobile_Push_Abstract implements Zend_Mobile_Push_Interface
     public function close()
     {
         $this->_isConnected = false;
+    }
+
+    /**
+     * Is Connected
+     *
+     * @return boolean
+     */
+    public function isConnected()
+    {
+        return $this->_isConnected;
     }
 
     /**
