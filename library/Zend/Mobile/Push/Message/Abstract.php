@@ -101,6 +101,26 @@ abstract class Zend_Mobile_Push_Message_Abstract implements Zend_Mobile_Push_Mes
     }
 
     /**
+     * Set Options
+     *
+     * @param array $options
+     * @return Zend_Mobile_Push_Message_Abstract
+     * @throws Zend_Mobile_Push_Message_Exception
+     */
+    public function setOptions(array $options)
+    {
+        foreach ($options as $k => $v) {
+            $method = 'set' . ucwords($k);
+            if (!method_exists($this, $method)) {
+                throw new Zend_Mobile_Push_Message_Exception('The method "' . $method . "' does not exist.");
+            }
+            $this->$method($v);
+        }
+        return $this;
+    }
+
+
+    /**
      * Validate Message format
      *
      * @return boolean

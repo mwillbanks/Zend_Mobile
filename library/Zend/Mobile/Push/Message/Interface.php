@@ -63,6 +63,14 @@ interface Zend_Mobile_Push_Message_Interface
     public function setId($id);
 
     /**
+     * Set Options
+     *
+     * @param array $options
+     * @return Zend_Mobile_Push_Message_Abstract
+     */
+    public function setOptions(array $options);
+
+    /**
      * Validate Message
      *
      * @return boolean

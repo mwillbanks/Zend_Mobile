@@ -53,4 +53,12 @@ interface Zend_Mobile_Push_Interface
      * @return void
      */
     public function close();
+
+    /**
+     * Set Options
+     *
+     * @param array $options
+     * @return Zend_Mobile_Push_Abstract
+     */
+    public function setOptions(array $options);
 }

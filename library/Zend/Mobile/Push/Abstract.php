@@ -20,7 +20,11 @@
  * @version    $Id$
  */
 
+/** Zend_Mobile_Push_Interface **/
 require_once 'Zend/Mobile/Push/Interface.php';
+
+/** Zend_Mobile_Push_Exception **/
+require_once 'Zend/Mobile/Push/Exception.php';
 
 /**
  * Push Abstract
@@ -73,5 +77,24 @@ abstract class Zend_Mobile_Push_Abstract implements Zend_Mobile_Push_Interface
     public function close()
     {
         $this->_isConnected = false;
+    }
+
+    /**
+     * Set Options
+     *
+     * @param array $options
+     * @return Zend_Mobile_Push_Abstract
+     * @throws Zend_Mobile_Push_Exception
+     */
+    public function setOptions(array $options)
+    {
+        foreach ($options as $k => $v) {
+            $method = 'set' . ucwords($k);
+            if (!method_exists($this, $method)) {
+                throw new Zend_Mobile_Push_Exception('The method "' . $method . "' does not exist.");
+            }
+            $this->$method($v);
+        }
+        return $this;
     }
 }
