@@ -157,7 +157,7 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
     /**
      * Feedback
      *
-     * @return array
+     * @return array array of arrays with indicies token and time
      */
     public function feedback()
     {
@@ -171,7 +171,7 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
         while (!feof($this->_socket)) {
             $token = fread($this->_socket, 38);
             if (strlen($token) < 38) {
-                continue; // Should we throw an Exception here?
+                continue;
             }
             $token = unpack('Ntime/ntokenLength/H*token', $token);
             $tokens[] = array('token' => $token['token'], 'time' => $token['time']);
