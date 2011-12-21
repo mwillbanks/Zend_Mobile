@@ -126,8 +126,8 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
         }
 
         $this->_socket = stream_socket_client($this->_serverUriList[$env],
-            &$errno,
-            &$errstr,
+            $errno,
+            $errstr,
             ini_get('default_socket_timeout'),
             STREAM_CLIENT_CONNECT,
             stream_context_create(array(
@@ -157,7 +157,7 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
     /**
      * Feedback
      *
-     * @return array array of arrays with indicies token and time
+     * @return array array w/ key = token and value = time
      */
     public function feedback()
     {
@@ -174,7 +174,9 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
                 continue;
             }
             $token = unpack('Ntime/ntokenLength/H*token', $token);
-            $tokens[] = array('token' => $token['token'], 'time' => $token['time']);
+            if (!isset($tokens[$token['token']]) || $tokens[$token['token']] < $token['time']) {
+                $tokens[$token['token']] = $token['time'];
+            }
         }
         return $tokens;
     }
