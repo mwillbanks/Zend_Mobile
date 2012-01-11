@@ -19,7 +19,10 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
+/** Zend_Mobile_Push_Message_Abstract **/
 require_once 'Zend/Mobile/Push/Message/Abstract.php';
+
+/** Zend_Uri **/
 require_once 'Zend/Uri.php';
 
 /**
@@ -35,6 +38,7 @@ abstract class Zend_Mobile_Push_Message_Mpns extends Zend_Mobile_Push_Message_Ab
 {
     /**
      * Mpns types
+     *
      * @var string
      */
     const TYPE_RAW = 'raw';
@@ -43,6 +47,7 @@ abstract class Zend_Mobile_Push_Message_Mpns extends Zend_Mobile_Push_Message_Ab
 
     /**
      * Delay
+     *
      * @var int
      */
     protected $_delay;

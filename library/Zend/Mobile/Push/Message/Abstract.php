@@ -40,12 +40,14 @@ abstract class Zend_Mobile_Push_Message_Abstract implements Zend_Mobile_Push_Mes
 {
     /**
      * Token
+     *
      * @var string
      */
     protected $_token;
 
     /**
      * Id
+     *
      * @var scalar
      */
     protected $_id;

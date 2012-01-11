@@ -19,6 +19,7 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
+/** Zend_Mobile_Push_Message_Mpns **/
 require_once 'Zend/Mobile/Push/Message/Mpns.php';
 
 /**
@@ -34,6 +35,7 @@ class Zend_Mobile_Push_Message_Mpns_Toast extends Zend_Mobile_Push_Message_Mpns
 {
     /**
      * Mpns delays
+     *
      * @var int
      */
     const DELAY_IMMEDIATE = 2;
@@ -42,18 +44,21 @@ class Zend_Mobile_Push_Message_Mpns_Toast extends Zend_Mobile_Push_Message_Mpns
 
     /**
      * Title
+     *
      * @var string
      */
     protected $_title;
 
     /**
      * Message
+     *
      * @var string
      */
     protected $_msg;
 
     /**
      * Params
+     *
      * @var string
      */
     protected $_params;

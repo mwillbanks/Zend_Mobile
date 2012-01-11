@@ -19,6 +19,7 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
+/** Zend_Mobile_Push_Message_Mpns **/
 require_once 'Zend/Mobile/Push/Message/Mpns.php';
 
 /**
@@ -34,6 +35,7 @@ class Zend_Mobile_Push_Message_Mpns_Tile extends Zend_Mobile_Push_Message_Mpns
 {
     /**
      * Mpns delays
+     *
      * @var int
      */
     const DELAY_IMMEDIATE = 1;
@@ -42,42 +44,49 @@ class Zend_Mobile_Push_Message_Mpns_Tile extends Zend_Mobile_Push_Message_Mpns
 
     /**
      * Background Image
+     *
      * @var string
      */
     protected $_backgroundImage;
 
     /**
      * Count
+     *
      * @var int
      */
     protected $_count = 0;
 
     /**
      * Title
+     *
      * @var string
      */
     protected $_title;
 
     /**
      * Back Background Image
+     *
      * @var string
      */
     protected $_backBackgroundImage;
 
     /**
      * Back Title
+     *
      * @var string
      */
     protected $_backTitle;
 
     /**
      * Back Content
+     *
      * @var string
      */
     protected $_backContent;
 
     /**
      * Tile ID
+     *
      * @var string
      */
     protected $_tileId;

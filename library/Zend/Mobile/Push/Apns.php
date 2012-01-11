@@ -20,7 +20,10 @@
  * @version    $Id$
  */
 
+/** Zend_Mobile_Push_Abstract **/
 require_once 'Zend/Mobile/Push/Abstract.php';
+
+/** Zend_Mobile_Push_Message_Apns **/
 require_once 'Zend/Mobile/Push/Message/Apns.php';
 
 /**
@@ -46,6 +49,7 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
 
     /**
      * Apple Server URI's
+     *
      * @var array
      */
     protected $_serverUriList = array(
@@ -57,18 +61,21 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
 
     /**
      * Current Environment
+     *
      * @var int
      */
     protected $_currentEnv;
 
     /**
      * Socket
+     *
      * @var resource
      */
     protected $_socket;
 
     /**
      * Certificate
+     *
      * @var string
      */
     protected $_certificate;
@@ -103,6 +110,65 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
     }
 
     /**
+     * Connect to Socket
+     *
+     * @param  string $uri
+     * @return bool
+     * @throws Zend_Mobile_Push_Exception_ServerUnavailable
+     */
+    protected function _connect($uri)
+    {
+        $this->_socket = stream_socket_client($uri,
+            $errno,
+            $errstr,
+            ini_get('default_socket_timeout'),
+            STREAM_CLIENT_CONNECT,
+            stream_context_create(array(
+                'ssl' => array(
+                    'local_cert' => $this->_certificate
+                ),
+            ))
+        );
+
+        if (!is_resource($this->_socket)) {
+            require_once 'Zend/Mobile/Push/Exception/ServerUnavailable.php';
+            throw new Zend_Mobile_Push_Exception_ServerUnavailable(sprintf('Unable to connect: %s: %d (%s)',
+                $env,
+                $errno,
+                $errstr
+            ));
+        }
+
+        stream_set_blocking($this->_socket, 0);
+        stream_set_write_buffer($this->_socket, 0);
+        return true;
+    }
+
+    /**
+    * Read from the Socket Server
+    * 
+    * @param int $length
+    * @return string
+    */
+    protected function _read($length) {
+        $data = false;
+        if (!feof($this->_socket)) {
+            $data = fread($this->_socket, $length);
+        }
+        return $data;
+    }
+
+    /**
+    * Write to the Socket Server
+    * 
+    * @param string $payload
+    * @return int
+    */
+    protected function _write($payload) {
+        return @fwrite($this->_socket, $payload);
+    }
+
+    /**
      * Connect to the Push Server
      *
      * @param string $env
@@ -125,34 +191,14 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
             throw new Zend_Mobile_Push_Exception('A certificate must be set prior to calling ::connect');
         }
 
-        $this->_socket = stream_socket_client($this->_serverUriList[$env],
-            $errno,
-            $errstr,
-            ini_get('default_socket_timeout'),
-            STREAM_CLIENT_CONNECT,
-            stream_context_create(array(
-                'ssl' => array(
-                    'local_cert' => $this->_certificate
-                ),
-            ))
-        );
-
-        if (!$this->_socket) {
-            require_once 'Zend/Mobile/Push/Exception/ServerUnavailable.php';
-            throw new Zend_Mobile_Push_Exception_ServerUnavailable(sprintf('Unable to connect: %s: %d (%s)',
-                $env,
-                $errno,
-                $errstr
-            ));
-        }
-
-        stream_set_blocking($this->_socket, 0);
-        stream_set_write_buffer($this->_socket, 0);
+        $this->_connect($this->_serverUriList[$env]);
 
         $this->_currentEnv = $env;
         $this->_isConnected = true;
         return $this;
     }
+
+
 
     /**
      * Feedback
@@ -168,8 +214,7 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
         }
 
         $tokens = array();
-        while (!feof($this->_socket)) {
-            $token = fread($this->_socket, 38);
+        while ($token = $this->_read(38)) {
             if (strlen($token) < 38) {
                 continue;
             }
@@ -231,13 +276,13 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
         $payload = pack('CNNnH*', 1, $id, $expire, 32, $message->getToken())
             . pack('n', strlen($payload))
             . $payload;
-        $ret = @fwrite($this->_socket, $payload);
+        $ret = $this->_send($payload);
         if ($ret === false) {
             require_once 'Zend/Mobile/Push/Exception/ServerUnavailable.php';
             throw new Zend_Mobile_Push_Exception_ServerUnavailable('Unable to send message');
         }
         // check for errors from apple
-        $err = fread($this->_socket, 1024);
+        $err = $this->_read(1024);
         if (strlen($err) > 0) {
             $err = unpack('Ccmd/Cerrno/Nid', $err);
             switch ($err['errno']) {
@@ -256,7 +301,7 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
                     throw new Zend_Mobile_Push_Exception_InvalidTopic('Missing topic');
                     break;
                 case 4:
-                    require_once 'Zend/Mobile/Push/Exception/InvalidPayload';
+                    require_once 'Zend/Mobile/Push/Exception/InvalidPayload.php';
                     throw new Zend_Mobile_Push_Exception_InvalidPayload('Missing payload');
                     break;
                 case 5:
@@ -282,6 +327,11 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
         return true;
     }
 
+    /**
+     * Close Connection
+     *
+     * @return void
+     */
     public function close()
     {
         if ($this->_isConnected && is_resource($this->_socket)) {

@@ -20,8 +20,13 @@
  * @version    $Id$
  */
 
+/** Zend_Http_Client **/
 require_once 'Zend/Http/Client.php';
+
+/** Zend_Mobile_Push_Abstract **/
 require_once 'Zend/Mobile/Push/Abstract.php';
+
+/** Zend_Mobile_Push_Message_C2dm **/
 require_once 'Zend/Mobile/Push/Message/C2dm.php';
 
 /**
@@ -49,12 +54,14 @@ class Zend_Mobile_Push_C2dm extends Zend_Mobile_Push_Abstract
 
     /**
      * Http Client
+     *
      * @var Client
      */
     protected $_httpClient;
 
     /**
      * Login Token
+     *
      * @var string
      */
     protected $_loginToken;
