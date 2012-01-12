@@ -276,7 +276,7 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
         $payload = pack('CNNnH*', 1, $id, $expire, 32, $message->getToken())
             . pack('n', strlen($payload))
             . $payload;
-        $ret = $this->_send($payload);
+        $ret = $this->_write($payload);
         if ($ret === false) {
             require_once 'Zend/Mobile/Push/Exception/ServerUnavailable.php';
             throw new Zend_Mobile_Push_Exception_ServerUnavailable('Unable to send message');
