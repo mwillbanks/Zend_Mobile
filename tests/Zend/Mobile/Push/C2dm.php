@@ -134,7 +134,7 @@ class Zend_Mobile_Push_C2dmTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Zend_Mobile_Push_Exception_MissingRegistration
+     * @expectedException Zend_Mobile_Push_Exception_InvalidToken
      */
     public function testSendThrowsExceptionWhenMissingRegistration()
     {
@@ -147,7 +147,7 @@ class Zend_Mobile_Push_C2dmTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Zend_Mobile_Push_Exception_InvalidRegistration
+     * @expectedException Zend_Mobile_Push_Exception_InvalidToken
      */
     public function testSendThrowsExceptionWhenInvalidRegistration()
     {
@@ -160,7 +160,7 @@ class Zend_Mobile_Push_C2dmTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Zend_Mobile_Push_Exception_MismatchSenderId
+     * @expectedException Zend_Mobile_Push_Exception_InvalidToken
      */
     public function testSendThrowsExceptionWhenMismatchSenderId()
     {
@@ -173,7 +173,7 @@ class Zend_Mobile_Push_C2dmTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Zend_Mobile_Push_Exception_NotRegistered
+     * @expectedException Zend_Mobile_Push_Exception_InvalidToken
      */
     public function testSendThrowsExceptionWhenNotRegistered()
     {
@@ -186,7 +186,7 @@ class Zend_Mobile_Push_C2dmTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Zend_Mobile_Push_Exception_MessageTooBig
+     * @expectedException Zend_Mobile_Push_Exception_InvalidPayload
      */
     public function testSendThrowsExceptionWhenMessageTooBig()
     {
@@ -199,7 +199,7 @@ class Zend_Mobile_Push_C2dmTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Zend_Mobile_Push_Exception_MissingCollapseKey
+     * @expectedException Zend_Mobile_Push_Exception_InvalidTopic
      */
     public function testSendThrowsExceptionWhenMissingCollapseKey()
     {

@@ -116,7 +116,7 @@ class Zend_Mobile_Push_MpnsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Zend_Mobile_Push_Exception_NotRegistered
+     * @expectedException Zend_Mobile_Push_Exception_InvalidToken
      */
     public function testSendThrowsExceptionWhenDeviceNotRegistered()
     {

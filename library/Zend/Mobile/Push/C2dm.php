@@ -85,8 +85,8 @@ class Zend_Mobile_Push_C2dm extends Zend_Mobile_Push_Abstract
      */
     public function setLoginToken($token)
     {
-        if (!is_string($token)) {
-            throw new Zend_Mobile_Push_Exception('Token parameter is not valid');
+        if (!is_string($token) || empty($token)) {
+            throw new Zend_Mobile_Push_Exception('The login token must be a string and not empty');
         }
         $this->_loginToken = $token;
         return $this;
@@ -129,7 +129,7 @@ class Zend_Mobile_Push_C2dm extends Zend_Mobile_Push_Abstract
     public function send(Zend_Mobile_Push_Message_Abstract $message)
     {
         if (!$message->validate()) {
-            throw new Zend_Mobile_Push_Exception('Zend_Mobile_Push_Message_C2dm parameter is not valid');
+            throw new Zend_Mobile_Push_Exception('The message is not valid.');
         }
 
         $this->connect();
@@ -162,21 +162,49 @@ class Zend_Mobile_Push_C2dm extends Zend_Mobile_Push_Abstract
                 $body = $response->getBody();
                 $body = preg_split('/=/', $body);
                 if (!isset($body[0]) || !isset($body[1])) {
+                    require_once 'Zend/Mobile/Push/Exception/ServerUnavailable.php';
                     throw new Zend_Mobile_Push_Exception_ServerUnavailable('The server gave us an invalid response, try again later');
                 }
                 if (strtolower($body[0]) == 'error') {
-                    require_once 'Zend/Filter/Alpha.php';
-                    $filter = new Zend_Filter_Alpha();
+                    $err = strtolower($body[1]);
+                    switch ($err) {
+                        case 'quotaexceeded':
+                            require_once 'Zend/Mobile/Push/Exception/QuotaExceeded.php';
+                            throw new Zend_Mobile_Push_Exception_QuotaExceeded('Too many messages sent by the sender. Retry after a while.');
+                            break;
+                        case 'devicequotaexceeded':
+                            require_once 'Zend/Mobile/Push/Exception/DeviceQuotaExceeded.php';
+                            throw new Zend_Mobile_Push_Exception_DeviceQuotaExceeded('Too many messages sent by the sender to a specific device. Retry after a while.');
+                            break;
+                        case 'missingregistration':
+                            require_once 'Zend/Mobile/Push/Exception/InvalidToken.php';
+                            throw new Zend_Mobile_Push_Exception_InvalidToken('Missing token.  The message must always have a token.');
+                            break;
+                        case 'invalidregistration':
+                            require_once 'Zend/Mobile/Push/Exception/InvalidToken.php';
+                            throw new Zend_Mobile_Push_Exception_InvalidToken('Bad token.  Remove this token from being sent to again.');
+                            break;
+                        case 'mismatchsenderid':
+                            require_once 'Zend/Mobile/Push/Exception/InvalidToken.php';
+                            throw new Zend_Mobile_Push_Exception_InvalidToken('Bad token.  This token is not registered with the current login');
+                            break;
+                        case 'notregistered':
+                            require_once 'Zend/Mobile/Push/Exception/InvalidToken.php';
+                            throw new Zend_Mobile_Push_Exception_InvalidToken('Bad token.  This token is not registered.');
+                            break;
+                        case 'messagetoobig':
+                            require_once 'Zend/Mobile/Push/Exception/InvalidPayload.php';
+                            throw new Zend_Mobile_Push_Exception_InvalidPayload('The message is too big; reduce the size of the message.');
+                            break;
+                        case 'missingcollapsekey':
+                            require_once 'Zend/Mobile/Push/Exception/InvalidTopic.php';
+                            throw new Zend_Mobile_Push_Exception_InvalidTopic('The message id must be set; include one in the message.');
+                            break;
+                        default:
+                            $err = strip_tags($body[1]);
+                            throw new Zend_Mobile_Push_Exception(sprintf('An unknown error occurred: %s', $err));
 
-                    $exception = $filter->filter($body[1]);
-                    $exception = 'Zend_Mobile_Push_Exception_' . $exception;
-                    $file = str_replace('_', '/', $exception) . '.php';
-                    require_once 'Zend/Loader.php';
-                    if (!Zend_Loader::isReadable($file)) {
-                        throw new Zend_Mobile_Push_Exception('An unknown error has occurred');
                     }
-                    require_once $file;
-                    throw new $exception();
                 }
                 break;
         }

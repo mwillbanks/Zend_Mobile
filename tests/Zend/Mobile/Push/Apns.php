@@ -187,7 +187,7 @@ class Zend_Mobile_Push_ApnsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Zend_Mobile_Push_Exception_MessageTooBig
+     * @expectedException Zend_Mobile_Push_Exception_InvalidPayload
      */
     public function testSendThrowsExceptionOnMessageTooBig()
     {

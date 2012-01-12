@@ -73,7 +73,7 @@ class Zend_Mobile_Push_Test_ApnsProxy extends Zend_Mobile_Push_Apns
      *
      * @return true
      */
-    protected function _connect() {
+    protected function _connect($uri) {
         return true;
     }
 
@@ -95,7 +95,7 @@ class Zend_Mobile_Push_Test_ApnsProxy extends Zend_Mobile_Push_Apns
      * @param string $payload
      * @return int
      */
-    protected function _send($payload) {
+    protected function _write($payload) {
         $ret = $this->_writeResponse;
         $this->_writeResponse = null;
         return (null === $ret) ? strlen($payload) : $ret;
