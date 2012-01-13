@@ -312,7 +312,7 @@ class Zend_Mobile_Push_Message_Mpns_Tile extends Zend_Mobile_Push_Message_Mpns
      */
     public static function getNotificationType()
     {
-        return 'tile';
+        return 'token';
     }
 
     /**
@@ -332,7 +332,7 @@ class Zend_Mobile_Push_Message_Mpns_Tile extends Zend_Mobile_Push_Message_Mpns
         if ($this->_backBackgroundImage) {
             $ret .= '<wp:BackBackgroundImage>' . htmlspecialchars($this->_backBackgroundImage) . '</wp:BackBackgroundImage>';
         }
-        if ($this->_backTile) {
+        if ($this->_backTitle) {
             $ret .= '<wp:BackTitle>' . htmlspecialchars($this->_backTitle) . '</wp:BackTitle>';
         }
         if ($this->_backContent) {
@@ -341,6 +341,7 @@ class Zend_Mobile_Push_Message_Mpns_Tile extends Zend_Mobile_Push_Message_Mpns
 
         $ret .= '</wp:Tile>'
             . '</wp:Notification>';
+        return $ret;
     }
 
     /**
