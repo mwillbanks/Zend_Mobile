@@ -74,9 +74,7 @@ $message->setData(array(
 ));
 try {
     $c2dm->send($message);
-} catch (Zend_Mobile_Push_Exception_InvalidRegistration $e) {
-    // do not attempt to send again
-} catch (Zend_Mobile_Push_Exception_NotRegistered $e) {
+} catch (Zend_Mobile_Push_Exception_InvalidToken $e) {
     // do not attempt to send again
 } catch (Zend_Mobile_Push_Exception_DeviceQuotaExceeded $e) {
     // retry later, likely each hour.
@@ -95,7 +93,7 @@ require_once 'Zend/Mobile/Push/Message/Mpns/Raw.php';
 $mpns = new Zend_Mobile_Push_Mpns();
  
 $message = new Zend_Mobile_Push_Message_Mpns_Raw();
-$message->setToken('http://somenotificationuri'); // REPLACE WITH NOTIFICATION URI FROM MPNS
+$message->setToken('http://sn1.notify.live.net/throttledthirdparty/01.00/THETOKEN'); // REPLACE WITH NOTIFICATION URI FROM MPNS
 $message->setMessage('<root><value attr="stuff" /></root>');
 $mpns->send($message);
 
@@ -108,12 +106,12 @@ require_once 'Zend/Mobile/Push/Message/Mpns/Toast.php';
 $mpns = new Zend_Mobile_Push_Mpns();
  
 $message = new Zend_Mobile_Push_Message_Mpns_Toast();
-$message->setToken('http://somenotificationuri'); // REPLACE WITH NOTIFICATION URI FROM MPNS
+$message->setToken('http://sn1.notify.live.net/throttledthirdparty/01.00/THETOKEN'); // REPLACE WITH NOTIFICATION URI FROM MPNS
 $message->setTitle('Test Notification');
 $message->setMessage('This is a test notification');
 
 // optional attributes for wp7.1+
-$message->setParams('?value=12345')'
+$message->setParams('?value=12345');
 $mpns->send($message);
 
 h3. Sending a Tile Message with MPNS
@@ -125,7 +123,7 @@ require_once 'Zend/Mobile/Push/Message/Mpns/Toast.php';
 $mpns = new Zend_Mobile_Push_Mpns();
  
 $message = new Zend_Mobile_Push_Message_Mpns_Tile();
-$message->setToken('http://somenotificationuri'); // REPLACE WITH NOTIFICATION URI FROM MPNS
+$message->setToken('http://sn1.notify.live.net/throttledthirdparty/01.00/THETOKEN'); // REPLACE WITH NOTIFICATION URI FROM MPNS
 $message->setBackgroundImage('red.jpg');
 $message->setCount(1);
 $message->setTitle('Wowzah!');
