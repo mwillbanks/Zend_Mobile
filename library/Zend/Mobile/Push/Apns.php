@@ -173,6 +173,8 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
      *
      * @param string $env
      * @return Zend_Mobile_Push_Abstract
+     * @throws Zend_Mobile_Push_Exception
+     * @throws Zend_Mobile_Push_Exception_ServerUnavailable
      */
     public function connect($env = self::SERVER_PRODUCTION_URI)
     {
@@ -204,6 +206,8 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
      * Feedback
      *
      * @return array array w/ key = token and value = time
+     * @throws Zend_Mobile_Push_Exception
+     * @throws Zend_Mobile_Push_Exception_ServerUnavailable
      */
     public function feedback()
     {
@@ -232,6 +236,10 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
      * @param Zend_Mobile_Push_Message_Apns $message
      * @return boolean
      * @throws Zend_Mobile_Push_Exception
+     * @throws Zend_Mobile_Push_Exception_ServerUnavailable
+     * @throws Zend_Mobile_Push_Exception_InvalidToken
+     * @throws Zend_Mobile_Push_Exception_InvalidTopic
+     * @throws Zend_Mobile_Push_Exception_InvalidPayload
      */
     public function send(Zend_Mobile_Push_Message_Abstract $message)
     {
@@ -298,7 +306,7 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
                     break;
                 case 3:
                     require_once 'Zend/Mobile/Push/Exception/InvalidTopic.php';
-                    throw new Zend_Mobile_Push_Exception_InvalidTopic('Missing topic');
+                    throw new Zend_Mobile_Push_Exception_InvalidTopic('Missing id; you must set an id for the message.');
                     break;
                 case 4:
                     require_once 'Zend/Mobile/Push/Exception/InvalidPayload.php';

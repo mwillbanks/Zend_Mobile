@@ -159,4 +159,26 @@ class Zend_Mobile_Push_MpnsTest extends PHPUnit_Framework_TestCase
         $this->adapter->setResponse('HTTP/1.1 503 Service Unavailable' . "\r\n\r\n");
         $this->mpns->send($this->getMessage('raw'));
     }
+
+    public function testAllOk()
+    {
+        $this->adapter->setResponse('HTTP/1.1 200 OK' . "\r\n\r\n");
+        $this->mpns->send($this->getMessage('raw'));
+
+        $toast = $this->getMessage('toast');
+        $toast->setTitle('Foo');
+        $toast->setMessage('Bar');
+        $this->mpns->send($toast);
+
+        $tile = $this->getMessage('tile');
+        $tile->setBackgroundImage('red.jpg');
+        $tile->setCount(1);
+        $tile->setTitle('Foo Bar');
+
+        // other optional attributes for wp7.1+
+        $tile->setTileId('/SomeAction.xaml');
+        $tile->setBackBackgroundImage('blue.jpg');
+        $tile->setBackTitle('Bar');
+        $tile->setBackContent('Foo');
+    }
 }

@@ -101,9 +101,9 @@ class Zend_Mobile_Push_Mpns extends Zend_Mobile_Push_Abstract
             $client->setHeaders('X-MessageID', $message->getId());
         }
         if ($message->getNotificationType() != Zend_Mobile_Push_Message_Mpns::TYPE_RAW) {
-            $client->setHeaders('X-WindowsPhone-Target', $message->getType());
+            $client->setHeaders('X-WindowsPhone-Target', $message->getNotificationType());
         }
-        $client->setRawData($message->getXmlPayload());
+        $client->setRawData($message->getXmlPayload(), 'text/xml');
         $response = $client->request('POST');
         $this->close();
 

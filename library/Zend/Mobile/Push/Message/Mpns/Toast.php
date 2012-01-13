@@ -181,7 +181,7 @@ class Zend_Mobile_Push_Message_Mpns_Toast extends Zend_Mobile_Push_Message_Mpns
      */
     public static function getNotificationType()
     {
-        return 'token';
+        return 'toast';
     }
 
     /**
@@ -199,8 +199,9 @@ class Zend_Mobile_Push_Message_Mpns_Toast extends Zend_Mobile_Push_Message_Mpns
         if (!empty($this->_params)) {
             $ret .= '<wp:Param>' . htmlspecialchars($this->_params) . '</wp:Param>';
         }
-        $ret .= '</wp:Tile>'
+        $ret .= '</wp:Toast>'
             . '</wp:Notification>';
+        return $ret;
     }
 
     /**
