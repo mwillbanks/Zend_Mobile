@@ -213,4 +213,22 @@ class Zend_Mobile_Push_Message_Mpns_TileTest extends PHPUnit_Framework_TestCase
         $this->_msg->setTitle('foo');
         $this->assertTrue($this->_msg->validate());
     }
+
+    public function testGetXmlPayload()
+    {
+        $title = 'foo';
+        $backgroundImage = 'bar.jpg';
+        $count = 5;
+        $this->_msg->setToken('http://sn1.notify.live.net/throttledthirdparty/abcdef1234567890');
+        $this->_msg->setTitle($title);
+        $this->_msg->setBackgroundImage($backgroundImage);
+        $this->_msg->setCount($count);
+
+        $xml = new SimpleXMLElement($this->_msg->getXmlPayload(), 0, false, 'wp', true);
+
+        $this->assertEquals($title, (string) $xml->Tile->Title);
+        $this->assertEquals($backgroundImage, (string) $xml->Tile->BackgroundImage);
+        $this->assertEquals($count, (int) $xml->Tile->Count);
+    }
+
 }

@@ -144,4 +144,18 @@ class Zend_Mobile_Push_Message_Mpns_ToastTest extends PHPUnit_Framework_TestCase
         $this->_msg->setMessage('bar');
         $this->assertTrue($this->_msg->validate());
     }
+
+    public function testGetXmlPayload()
+    {
+        $title = 'Foo';
+        $message = 'Bar';
+        $this->_msg->setToken('http://sn1.notify.live.net/throttledthirdparty/abcdef1234567890');
+        $this->_msg->setTitle($title);
+        $this->_msg->setMessage($message);
+
+        $xml = new SimpleXMLElement($this->_msg->getXmlPayload(), 0, false, 'wp', true);
+
+        $this->assertEquals($title, (string) $xml->Toast->Text1);
+        $this->assertEquals($message, (string) $xml->Toast->Text2);
+    }
 }

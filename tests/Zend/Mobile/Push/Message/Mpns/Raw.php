@@ -128,4 +128,12 @@ class Zend_Mobile_Push_Message_Mpns_RawTest extends PHPUnit_Framework_TestCase
         $this->_msg->setMessage('<root><bar>foo</bar></root>');
         $this->assertTrue($this->_msg->validate());
     }
+
+    public function testGetXmlPayload()
+    {
+        $raw = '<root><bar>foo</bar></root>';
+        $this->_msg->setToken('http://sn1.notify.live.net/throttledthirdparty/abcdef1234567890');
+        $this->_msg->setMessage($raw);
+        $this->assertEquals($this->_msg->getXmlPayload(), $raw);
+    }
 }
