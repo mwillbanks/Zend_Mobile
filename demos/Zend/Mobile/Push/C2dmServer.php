@@ -1,5 +1,6 @@
 <?php
 require_once 'Zend/Mobile/Push/C2dm.php';
+require_once 'Zend/Mobile/Push/Message/C2dm.php';
 require_once 'Zend/Gdata/ClientLogin.php';
 
 try {
@@ -19,15 +20,24 @@ try {
     echo 'Problem authenticating: ' . $ae->exception() . PHP_EOL;
     exit(1);
 }
-
+ 
+$message = new Zend_Mobile_Push_Message_C2dm();
+$message->setId(time());
+$message->setToken('ABCDEF0123456789');
+$message->setData(array(
+    'foo' => 'bar',
+    'bar' => 'foo',
+));
+ 
 $c2dm = new Zend_Mobile_Push_C2dm();
 $c2dm->setLoginToken($client->getClientLoginToken());
-
-$message = new Zend_Mobile_Push_Message_C2dm();
-$message->setToken('a-device-token'); // REPLACE WITH A DEVICE TOKEN
-$message->setId('testCollapseKey');
-$message->setData(array(
-    'title' => 'Test Notification',
-    'msg' => 'This is a test notification.'
-));
-$c2dm->send($message);
+ 
+try {
+    $c2dm->send($message);
+} catch (Zend_Mobile_Push_Exception_InvalidToken $e) {
+    // you would likely want to remove the token from being sent to again
+    echo $e->getMessage();
+} catch (Zend_Mobile_Push_Exception $e) {
+    // all other exceptions only require action to be sent or implementation of exponential backoff.
+    echo $e->getMessage();
+}
