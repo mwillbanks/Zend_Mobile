@@ -160,7 +160,7 @@ class Zend_Mobile_Push_C2dm extends Zend_Mobile_Push_Abstract
                 break;
             default:
                 $body = $response->getBody();
-                $body = preg_split('/=/', $body);
+                $body = explode('=', $body);
                 if (!isset($body[0]) || !isset($body[1])) {
                     require_once 'Zend/Mobile/Push/Exception/ServerUnavailable.php';
                     throw new Zend_Mobile_Push_Exception_ServerUnavailable('The server gave us an invalid response, try again later');
