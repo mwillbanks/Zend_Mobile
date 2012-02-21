@@ -133,7 +133,7 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
         if (!is_resource($this->_socket)) {
             require_once 'Zend/Mobile/Push/Exception/ServerUnavailable.php';
             throw new Zend_Mobile_Push_Exception_ServerUnavailable(sprintf('Unable to connect: %s: %d (%s)',
-                $env,
+                $uri,
                 $errno,
                 $errstr
             ));
