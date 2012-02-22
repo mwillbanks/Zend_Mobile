@@ -104,4 +104,12 @@ class Zend_Mobile_Push_Message_C2dmTest extends PHPUnit_Framework_TestCase
         $msg->setToken('a-token!');
         $this->assertTrue($msg->validate());
     }
+
+    public function testValidateWithIdAsIntAndTokenReturnsTrue()
+    {
+        $msg = new Zend_Mobile_Push_Message_C2dm();
+        $msg->setId(time());
+        $msg->setToken('da-token');
+        $this->assertTrue($msg->validate());
+    }
 }

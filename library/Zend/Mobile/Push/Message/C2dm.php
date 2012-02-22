@@ -142,7 +142,7 @@ class Zend_Mobile_Push_Message_C2dm extends Zend_Mobile_Push_Message_Abstract
         if (!is_string($this->_token) || strlen($this->_token) === 0) {
             return false;
         }
-        if (!is_string($this->_id) || strlen($this->_id) === 0) {
+        if (!is_scalar($this->_id) || strlen($this->_id) === 0) {
             return false;
         }
         return true;
