@@ -88,6 +88,26 @@ class Zend_Mobile_Push_ApnsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($this->apns, $ret);
     }
 
+    /**
+     * @expectedException Zend_Mobile_Push_Exception
+     */
+    public function testSetCertificatePassphraseThrowsExceptionOnNonString()
+    {
+        $this->apns->setCertificatePassphrase(array('foo'));
+    }
+
+    public function testSetCertificatePassphraseReturnsInstance()
+    {
+        $ret = $this->apns->setCertificatePassphrase('foobar');
+        $this->assertEquals($this->apns, $ret);
+    }
+
+    public function testSetCertificatePassphraseSetsPassphrase()
+    {
+        $this->apns->setCertificatePassphrase('foobar');
+        $this->assertEquals('foobar', $this->apns->getCertificatePassphrase());
+    }
+
     public function testConnectReturnsThis()
     {
         $this->apns->setCertificate('Zend/Mobile/Push/certificate.pem');

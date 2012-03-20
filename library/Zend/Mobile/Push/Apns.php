@@ -81,6 +81,13 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
     protected $_certificate;
 
     /**
+     * Certificate Passphrase
+     *
+     * @var string
+     */
+    protected $_certificatePassphrase;
+
+    /**
      * Get Certficiate
      *
      * @return string
@@ -110,6 +117,32 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
     }
 
     /**
+     * Get Certificate Passphrase
+     *
+     * @return string
+     */
+    public function getCertificatePassphrase()
+    {
+        return $this->_certificatePassphrase;
+    }
+
+    /**
+     * Set Certificate Passphrase
+     *
+     * @param  string $passphrase
+     * @return Zend_Mobile_Push_Apns
+     * @throws Zend_Mobile_Push_Exception
+     */
+    public function setCertificatePassphrase($passphrase)
+    {
+        if (!is_string($passphrase)) {
+            throw new Zend_Mobile_Push_Exception('$passphrase must be a string');
+        }
+        $this->_certificatePassphrase = $passphrase;
+        return $this;
+    }
+
+    /**
      * Connect to Socket
      *
      * @param  string $uri
@@ -118,15 +151,20 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
      */
     protected function _connect($uri)
     {
+        $ssl = array(
+            'local_cert' => $this->_certificate,
+        );
+        if ($this->_certificatePassphrase) {
+            $ssl['passphrase'] = $this->_certificatePassphrase;
+        }
+
         $this->_socket = stream_socket_client($uri,
             $errno,
             $errstr,
             ini_get('default_socket_timeout'),
             STREAM_CLIENT_CONNECT,
             stream_context_create(array(
-                'ssl' => array(
-                    'local_cert' => $this->_certificate
-                ),
+                'ssl' => $ssl,
             ))
         );
 

@@ -44,6 +44,8 @@ $message->setToken('ABCDEF0123456789');
 
 $apns = new Zend_Mobile_Push_Apns();
 $apns->setCertificate('/path/to/provisioning-certificate.pem');
+// if you have a passphrase on your certificate:
+// $apns->setCertificatePassphrase('foobar');
 
 try {
     $apns->connect(Zend_Mobile_Push_Apns::SERVER_SANDBOX_URI);
