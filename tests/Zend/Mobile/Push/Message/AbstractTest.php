@@ -13,7 +13,7 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Mobile
+ * @package    Zend_Mobile_Push_Message
  * @subpackage Push
  * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
@@ -24,13 +24,11 @@ require_once 'Zend/Mobile/Push/Message/Abstract.php';
 
 /**
  * @category   Zend
- * @package    Zend_Mobile
- * @subpackage Push
+ * @package    Zend_Mobile_Push_Message
+ * @subpackage UnitTests
  * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @group      Zend_Mobile
- * @group      Zend_Mobile_Push
- * @group      Zend_Mobile_Push_Abstract
  */
 class Zend_Mobile_Push_Message_AbstractTest extends PHPUnit_Framework_TestCase
 {
