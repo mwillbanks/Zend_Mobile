@@ -66,7 +66,7 @@ abstract class Zend_Mobile_Push_Message_Abstract implements Zend_Mobile_Push_Mes
      * Set Token
      *
      * @param  string $token
-     * @return Zend_Mobile_Push_Message_Abstract@g
+     * @return Zend_Mobile_Push_Message_Abstract
      */
     public function setToken($token)
     {
@@ -91,7 +91,7 @@ abstract class Zend_Mobile_Push_Message_Abstract implements Zend_Mobile_Push_Mes
      * Set Message ID
      *
      * @param scalar $id
-     * @return Zend_Mobile_Push_Message_Abstract@g
+     * @return Zend_Mobile_Push_Message_Abstract
      * @throws Exception
      */
     public function setId($id)
