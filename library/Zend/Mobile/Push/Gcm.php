@@ -29,6 +29,9 @@ require_once 'Zend/Mobile/Push/Abstract.php';
 /** Zend_Mobile_Push_Message_Gcm **/
 require_once 'Zend/Mobile/Push/Message/Gcm.php';
 
+/** Zend_Mobile_Push_Response_Gcm **/
+require_once 'Zend/Mobile/Push/Response/Gcm.php';
+
 /**
  * C2DM Push
  *
@@ -141,8 +144,8 @@ class Zend_Mobile_Push_Gcm extends Zend_Mobile_Push_Abstract
             $json['id'] = $id;
         }
 
-        $client->setRawData($message->toJson(), 'application/json')
-               ->request('POST');
+        $response = $client->setRawData($message->toJson(), 'application/json')
+                           ->request('POST');
         $this->close();
 
         switch ($response->getStatus())
@@ -163,11 +166,6 @@ class Zend_Mobile_Push_Gcm extends Zend_Mobile_Push_Abstract
                 require_once 'Zend/Mobile/Push/Exception/InvalidPayload.php';
                 throw new Zend_Mobile_Push_Exception_InvalidPayload('The request could not be parsed as JSON or contains invalid fields');
                 break;
-        }
-        $body = $response->getBody();
-        if (!$body = json_decode($response->getBody) || empty($body)) {
-            require_once 'Zend/Mobile/Push/Exception/ServerUnavailable.php';
-            throw new Zend_Mobile_Push_Exception_ServerUnavailable('The server gave us an invalid response, try again later');
         }
         return new Zend_Mobile_Push_Response_Gcm($message, $response->getBody());
     }

@@ -76,7 +76,7 @@ class Zend_Mobile_Push_Message_Gcm extends Zend_Mobile_Push_Message_Abstract
         if (!is_string($token)) {
             throw new Zend_Mobile_Push_Message_Exception('$token must be a string');
         }
-        if (!in_array($token, $this->token)) {
+        if (!in_array($token, $this->_token)) {
            $this->_token[] = $token;
         }
         return $this;
@@ -85,14 +85,19 @@ class Zend_Mobile_Push_Message_Gcm extends Zend_Mobile_Push_Message_Abstract
     /**
      * Set Token
      *
-     * @param  array $token
+     * @param  string|array $token
      * @return Zend_Mobile_Push_Message_Gcm
      * @throws Zend_Mobile_Push_Message_Exception
      */
-    public function setToken(array $token)
+    public function setToken($token)
     {
-        foreach ($token as $t) {
-            $this->addToken($t);
+        $this->clearToken();
+        if (is_string($token)) {
+            $this->addToken($token);
+        } else if (is_array($token)) {
+            foreach ($token as $t) {
+                $this->addToken($t);
+            }
         }
         return $this;
     }
@@ -227,12 +232,12 @@ class Zend_Mobile_Push_Message_Gcm extends Zend_Mobile_Push_Message_Abstract
      */
     public function validate()
     {
-        if (!is_string($this->_token) || strlen($this->_token) === 0) {
+        if (!is_array($this->_token) || empty($this->_token)) {
             return false;
         }
         if ($this->_ttl > 0 &&
-            !is_scalar($this->_id) ||
-            strlen($this->_id) === 0) {
+            (!is_scalar($this->_id) ||
+            strlen($this->_id) === 0)) {
             return false;
         }
         return true;

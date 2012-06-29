@@ -62,6 +62,12 @@ class Zend_Mobile_Push_Response_Gcm
     protected $_canonicalCnt;
 
     /**
+     * Message
+     * @var Zend_Mobile_Push_Message_Gcm
+     */
+    protected $_message;
+
+    /**
      * Results
      * @var array
      */
@@ -76,15 +82,15 @@ class Zend_Mobile_Push_Response_Gcm
     /**
      * Constructor
      *
-     * @param Zend_Mobile_Push_Message_Abstract $message
+     * @param Zend_Mobile_Push_Message_Gcm $message
      * @param string $responseString JSON encoded response
      * @return Zend_Mobile_Push_Response_Gcm
      * @throws Zend_Mobile_Push_Exception_ServerUnavailable
      */
-    public function __construct(Zend_Mobile_Push_Message_Abstract $message = null, $responseString = null)
+    public function __construct(Zend_Mobile_Push_Message_Gcm $message = null, $responseString = null)
     {
         if ($responseString) {
-            if (!$response = json_decode($responseString)) {
+            if (!$response = json_decode($responseString, true)) {
                 require_once 'Zend/Mobile/Push/Exception/ServerUnavailable.php';
                 throw new Zend_Mobile_Push_Exception_ServerUnavailable('The server gave us an invalid response, try again later');
             }
@@ -95,6 +101,28 @@ class Zend_Mobile_Push_Response_Gcm
             $this->setMessage($message);
         }
 
+    }
+
+    /**
+     * Get Message
+     *
+     * @return Zend_Mobile_Push_Message_Gcm
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * Set Message
+     *
+     * @param Zend_Mobile_Push_Message_Gcm $message
+     * @return Zend_Mobile_Push_Response_Gcm
+     */
+    public function setMessage(Zend_Mobile_Push_Message_Gcm $message)
+    {
+        $this->_message = $message;
+        return $this;
     }
 
     /**
@@ -138,7 +166,7 @@ class Zend_Mobile_Push_Response_Gcm
      */
     public function getSuccessCount()
     {
-        return $this->_sucessCnt;
+        return $this->_successCnt;
     }
 
     /**
@@ -203,8 +231,8 @@ class Zend_Mobile_Push_Response_Gcm
     protected function _correlate()
     {
         $results = $this->_results;
-        if ($this->message && $results) {
-            $tokens = $this->message->getToken();
+        if ($this->_message && $results) {
+            $tokens = $this->_message->getToken();
             while($token = array_shift($tokens)) {
                 $results[$token] = array_shift($results);
             }
