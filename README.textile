@@ -3,15 +3,14 @@ h1. Zend Framework 1.x Push Notifications
 This component (Zend_Mobile) allows you to send push notifications with Zend
 Framework.  This library currently supports:
 * APNS: Apple Push Notification Service (iTouch/iPad/iPhone)
-* C2DM: Cloud to Device Messaging (Android - Google)
+* GCM: Google Cloud Messaging (Android - Google)
 * MPNS: Microsoft Push Notification Service (Windows Mobile)
 
 h2. Requirements
 
 This project makes usage of libraries from Zend Framework for a few different
 areas:
-* C2dm Authentication - Zend_Gdata_ClientLogin
-* C2dm & Mpns HTTP - Zend_Http_Client
+* GCM & Mpns HTTP - Zend_Http_Client
 * Mpns Id Validation - Zend_Uri
 
 h2. Examples and Documentation
@@ -24,3 +23,4 @@ h2. ZF Proposal
 
 ZF Proposal Page: "Zend_Mobile_Push - Mike Willbanks":http://framework.zend.com/wiki/display/ZFPROP/Zend_Mobile_Push+-+Mike+Willbanks
 ZF 1.12 Status Page: "Zend Framework 1.12":http://framework.zend.com/wiki/display/ZFDEV/Zend+Framework+1.12
+* Currently in RC
