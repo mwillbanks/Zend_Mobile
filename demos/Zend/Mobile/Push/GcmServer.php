@@ -13,8 +13,6 @@
     $gcm = new Zend_Mobile_Push_Gcm();
     $gcm->setApiKey('MYAPIKEY');
 
-    $response = false;
-
     try {
         $response = $gcm->send($message);
     } catch (Zend_Mobile_Push_Exception $e) {
