@@ -24,7 +24,7 @@
 require_once 'Zend/Mobile/Push/Message/Abstract.php';
 
 /**
- * C2dm Message
+ * Gcm Message
  *
  * @category   Zend
  * @package    Zend_Mobile
@@ -33,8 +33,16 @@ require_once 'Zend/Mobile/Push/Message/Abstract.php';
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
  */
-class Zend_Mobile_Push_Message_C2dm extends Zend_Mobile_Push_Message_Abstract
+class Zend_Mobile_Push_Message_Gcm extends Zend_Mobile_Push_Message_Abstract
 {
+
+    /**
+     * Tokens
+     *
+     * @var array
+     */
+    protected $_token = array();
+
     /**
      * Data key value pairs
      * 
@@ -43,18 +51,70 @@ class Zend_Mobile_Push_Message_C2dm extends Zend_Mobile_Push_Message_Abstract
     protected $_data = array();
 
     /**
-     * Delay While Idle
+     * Delay while idle
      *
      * @var boolean
      */
     protected $_delay = false;
 
     /**
+     * Time to live in seconds
+     * 
+     * @var int
+     */
+    protected $_ttl = 0;
+
+    /**
+     * Add a Token
+     *
+     * @param  string $token
+     * @return Zend_Mobile_Push_Message_Gcm
+     * @throws Zend_Mobile_Push_Message_Exception
+     */
+    public function addToken($token)
+    {
+        if (!is_string($token)) {
+            throw new Zend_Mobile_Push_Message_Exception('$token must be a string');
+        }
+        if (!in_array($token, $this->token)) {
+           $this->_token[] = $token;
+        }
+        return $this;
+    }
+
+    /**
+     * Set Token
+     *
+     * @param  array $token
+     * @return Zend_Mobile_Push_Message_Gcm
+     * @throws Zend_Mobile_Push_Message_Exception
+     */
+    public function setToken(array $token)
+    {
+        foreach ($token as $t) {
+            $this->addToken($t);
+        }
+        return $this;
+    }
+
+    /**
+     * Clear Tokens
+     *
+     * @return Zend_Mobile_Push_Message_Gcm
+     */
+    public function clearToken()
+    {
+        $this->_token = array();
+        return $this;
+    }
+
+
+    /**
      * Add Data
      *
-     * @param string $key
-     * @param string $value
-     * @return Zend_Mobile_Push_Message_C2dm
+     * @param  string $key
+     * @param  string $value
+     * @return Zend_Mobile_Push_Message_Gcm
      * @throws Zend_Mobile_Push_Message_Exception
      */
     public function addData($key, $value)
@@ -73,7 +133,7 @@ class Zend_Mobile_Push_Message_C2dm extends Zend_Mobile_Push_Message_Abstract
      * Set Data
      *
      * @param array $data
-     * @return Zend_Mobile_Push_Message_C2dm
+     * @return Zend_Mobile_Push_Message_Gcm
      * @throws Zend_Mobile_Push_Message_Exception
      */
     public function setData(array $data)
@@ -88,11 +148,12 @@ class Zend_Mobile_Push_Message_C2dm extends Zend_Mobile_Push_Message_Abstract
     /**
      * Clear Data
      *
-     * @return Zend_Mobile_Push_Message_C2dm
+     * @return Zend_Mobile_Push_Message_Gcm
      */
     public function clearData()
     {
         $this->_data = array();
+        return $this;
     }
 
     /**
@@ -109,7 +170,7 @@ class Zend_Mobile_Push_Message_C2dm extends Zend_Mobile_Push_Message_Abstract
      * Set Delay While Idle
      *
      * @param boolean $delay
-     * @return Zend_Mobile_Push_Message_C2dm
+     * @return Zend_Mobile_Push_Message_Gcm
      * @throws Zend_Mobile_Push_Message_Exception
      */
     public function setDelayWhileIdle($delay)
@@ -132,7 +193,34 @@ class Zend_Mobile_Push_Message_C2dm extends Zend_Mobile_Push_Message_Abstract
     }
 
     /**
-     * Validate this is a proper C2dm message
+     * Set time to live
+     * If $secs is set to 0 it will be handled as
+     * not being set.
+     *
+     * @param  int $secs
+     * @return Zend_Mobile_Push_Message_Gcm
+     */
+    public function setTtl($secs)
+    {
+        if (!is_numeric($secs)) {
+            throw new Zend_Mobile_Push_Message_Exception('$secs must be numeric');
+        }
+        $this->_ttl = (int) $secs;
+        return $this;
+    }
+
+    /**
+     * Get time to live
+     *
+     * @return int
+     */
+    public function getTtl()
+    {
+        return $this->_ttl;
+    }
+
+    /**
+     * Validate this is a proper Gcm message
      * Does not validate size.
      *
      * @return boolean
@@ -142,9 +230,39 @@ class Zend_Mobile_Push_Message_C2dm extends Zend_Mobile_Push_Message_Abstract
         if (!is_string($this->_token) || strlen($this->_token) === 0) {
             return false;
         }
-        if (!is_scalar($this->_id) || strlen($this->_id) === 0) {
+        if ($this->_ttl > 0 &&
+            !is_scalar($this->_id) ||
+            strlen($this->_id) === 0) {
             return false;
         }
         return true;
+    }
+
+    /**
+     * To Json utility method
+     * Takes the data and properly assigns it to
+     * a json encoded array to match the Gcm format.
+     *
+     * @return string
+     */
+    public function toJson()
+    {
+        $json = array();
+        if ($this->_token) {
+            $json['registration_ids'] = $this->_token;
+        }
+        if ($this->_id) {
+            $json['collapse_key'] = $this->_id;
+        }
+        if ($this->_data) {
+            $json['data'] = $this->_data;
+        }
+        if ($this->_delay) {
+            $json['delay_while_idle'] = $this->_delay;
+        }
+        if ($this->_ttl) {
+            $json['time_to_live'] = $this->_ttl;
+        }
+        return json_encode($json);
     }
 }
