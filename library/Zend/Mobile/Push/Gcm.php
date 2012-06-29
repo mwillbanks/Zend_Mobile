@@ -33,7 +33,7 @@ require_once 'Zend/Mobile/Push/Message/Gcm.php';
 require_once 'Zend/Mobile/Push/Response/Gcm.php';
 
 /**
- * C2DM Push
+ * GCM Push
  *
  * @category   Zend
  * @package    Zend_Mobile
