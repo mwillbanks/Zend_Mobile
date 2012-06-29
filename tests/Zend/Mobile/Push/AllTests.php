@@ -27,7 +27,7 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
 require_once 'Zend/Mobile/Push/Message/AllTests.php';
 require_once 'Zend/Mobile/Push/AbstractTest.php';
 require_once 'Zend/Mobile/Push/ApnsTest.php';
-require_once 'Zend/Mobile/Push/C2dmTest.php';
+require_once 'Zend/Mobile/Push/GcmTest.php';
 require_once 'Zend/Mobile/Push/MpnsTest.php';
 
 /**
@@ -53,7 +53,7 @@ class Zend_Mobile_Push_AllTests
          
         $suite->addTestSuite('Zend_Mobile_Push_AbstractTest');
         $suite->addTestSuite('Zend_Mobile_Push_ApnsTest');
-        $suite->addTestSuite('Zend_Mobile_Push_C2dmTest');
+        $suite->addTestSuite('Zend_Mobile_Push_GcmTest');
         $suite->addTestSuite('Zend_Mobile_Push_MpnsTest');
 
         return $suite;
