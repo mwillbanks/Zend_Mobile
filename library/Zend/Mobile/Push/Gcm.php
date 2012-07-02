@@ -167,6 +167,6 @@ class Zend_Mobile_Push_Gcm extends Zend_Mobile_Push_Abstract
                 throw new Zend_Mobile_Push_Exception_InvalidPayload('The request could not be parsed as JSON or contains invalid fields');
                 break;
         }
-        return new Zend_Mobile_Push_Response_Gcm($message, $response->getBody());
+        return new Zend_Mobile_Push_Response_Gcm($response->getBody(), $message);
     }
 }

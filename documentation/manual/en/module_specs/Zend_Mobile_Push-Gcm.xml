@@ -167,4 +167,38 @@ foreach ($response->getResults() as $k => $v) {
 
         </sect3>
     </sect2>
+
+    <sect2 id="zend.mobile.push.gcm.response">
+
+        <title>Response</title>
+
+        <para>
+            GCM gives a response back that contains detail that needs to be
+            understood.  Most of the time you can just send a message but the
+            server may come back telling you any the message id, any errors and
+            potentially new registration ids.
+        </para>
+
+        <sect3 id="zend.mobile.push.gcm.response.result">
+
+            <title>Results</title>
+
+            <para>
+                The results are most commonly retrieved by calling the
+                getResults() method.  However, you may prefer to just get
+                certain results by using the getResult() method.  The getResult
+                method utilizes the constants RESULT_* correlating to message
+                id, error or registration id.
+            </para>
+
+            <para>
+                Several utility methods exist to give you a better idea of what
+                happened during your send.  Methods getSuccessCount(),
+                getFailureCount() and getCanonicalCount() let you know how many
+                where successful, how many failures and how many updates to
+                registration ids you have.
+            </para>
+
+        </sect3>
+
 </sect1>
