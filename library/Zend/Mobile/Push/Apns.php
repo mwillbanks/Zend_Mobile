@@ -55,8 +55,8 @@ class Zend_Mobile_Push_Apns extends Zend_Mobile_Push_Abstract
     protected $_serverUriList = array(
         'ssl://gateway.sandbox.push.apple.com:2195',
         'ssl://gateway.push.apple.com:2195',
-        'ssl://feedback.push.apple.com:2196',
-        'ssl://feedback.sandbox.push.apple.com:2196'
+        'ssl://feedback.sandbox.push.apple.com:2196',
+        'ssl://feedback.push.apple.com:2196'
     );
 
     /**
