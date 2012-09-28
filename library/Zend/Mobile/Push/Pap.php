@@ -71,9 +71,6 @@ class Zend_Mobile_Push_Pap implements Zend_Mobile_Push_Interface {
 		return $this->_environment;
 	}
 
-	public function push(Zend_Mobile_Push_Message_Pap $m) {
-		
-	}
 	public function connect() {
 		// TODO: Auto-generated method stub
 
@@ -94,7 +91,7 @@ class Zend_Mobile_Push_Pap implements Zend_Mobile_Push_Interface {
 		curl_setopt($ch, CURLOPT_USERPWD,
 				$this->_appId . ':' . $this->_password);
 		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $m->getPushMessage($this->_appId));
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $message->getPushMessage($this->_appId));
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_HTTPHEADER,
 				array(
