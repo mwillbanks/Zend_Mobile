@@ -5,6 +5,7 @@ Framework.  This library currently supports:
 * APNS: Apple Push Notification Service (iTouch/iPad/iPhone)
 * GCM: Google Cloud Messaging (Android - Google)
 * MPNS: Microsoft Push Notification Service (Windows Mobile)
+* Pap: BlackBerry Push Notification Service (BlackBerry Phones)
 
 h2. Requirements
 
