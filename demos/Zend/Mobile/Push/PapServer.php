@@ -16,11 +16,11 @@ if ($env == 'prod')
 
 	$response = $this->pap->send($message);
 	if ($response->isError()) {
-		echo 'Zend Mobile Push::Descrizione errore: '
+		echo 'Zend Mobile Push::error: '
 		. $response->getErrorString();
 
 	} else
-		echo 'Zend Mobile Push::Descrizione risposta: '
+		echo 'Zend Mobile Push::response_description: '
 		. $response->getResponseDesc();
 
 }
