@@ -66,6 +66,13 @@ class Zend_Mobile_Push_Message_Gcm extends Zend_Mobile_Push_Message_Abstract
     protected $_ttl = 0;
 
     /**
+     * Allows developers to test their request without actually sending a message
+     * 
+     * @var boolean
+     */
+    protected $_dryRun = false;
+
+    /**
      * Add a Token
      *
      * @param  string $token
@@ -226,6 +233,31 @@ class Zend_Mobile_Push_Message_Gcm extends Zend_Mobile_Push_Message_Abstract
     }
 
     /**
+     * Set dry run
+     *
+     * @param  boolean $dryRun
+     * @return Zend_Mobile_Push_Message_Gcm
+     */
+    public function setDryRun($dryRun)
+    {
+        if (!is_bool($dryRun)) {
+            throw new Zend_Mobile_Push_Message_Exception('$dryRun must be boolean');
+        }
+        $this->_dryRun = $dryRun;
+        return $this;
+    }
+
+    /**
+     * Get dry run
+     *
+     * @return boolean
+     */
+    public function getDryRun()
+    {
+        return $this->_dryRun;
+    }
+
+    /**
      * Validate this is a proper Gcm message
      * Does not validate size.
      *
@@ -268,6 +300,9 @@ class Zend_Mobile_Push_Message_Gcm extends Zend_Mobile_Push_Message_Abstract
         }
         if ($this->_ttl) {
             $json['time_to_live'] = $this->_ttl;
+        }
+        if ($this->_dryRun) {
+            $json['dry_run'] = $this->_dryRun;
         }
         return json_encode($json);
     }
