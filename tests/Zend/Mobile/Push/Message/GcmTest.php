@@ -100,6 +100,24 @@ class Zend_Mobile_Push_Message_GcmTest extends PHPUnit_Framework_TestCase
         $msg->setDelayWhileIdle('true');
     }
 
+    public function testDryRun()
+    {
+        $msg = new Zend_Mobile_Push_Message_Gcm();
+        $msg->setDryRun(true);
+        $this->assertTrue($msg->getDryRun());
+        $msg->setDryRun(false);
+        $this->assertFalse($msg->getDryRun());
+    }
+
+    /**
+     * @expectedException Zend_Mobile_Push_Message_Exception
+     */
+    public function testDryRunThrowsExceptionOnInvalidValue()
+    {
+        $msg = new Zend_Mobile_Push_Message_Gcm();
+        $msg->setDryRun('true');
+    }
+
     public function testTtl()
     {
         $msg = new Zend_Mobile_Push_Message_Gcm();
